@@ -123,7 +123,7 @@ class HomeView extends StatelessWidget {
                             Center(
                               child: Image.asset(
                                 'assets/images/product_image.png',
-                                width: 140,
+                                width: 120,
                               ),
                             ),
                             Text('Regular Fit Slogan'),

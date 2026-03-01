@@ -6,11 +6,11 @@ class AccountMenu extends StatelessWidget {
   String title;
   VoidCallback onTap;
   AccountMenu({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

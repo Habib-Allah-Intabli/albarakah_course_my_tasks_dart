@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_22_full_design/core/blocs/user_session_bloc/user_session_bloc.dart';
 import 'package:task_22_full_design/views/login_view.dart';
 
 class OnboardingView extends StatelessWidget {
@@ -35,14 +37,7 @@ class OnboardingView extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return LoginView();
-                  },
-                ),
-              );
+              context.read<UserSessionBloc>().add(CompleteOnboarding());
             },
             child: Container(
               width: 340,
