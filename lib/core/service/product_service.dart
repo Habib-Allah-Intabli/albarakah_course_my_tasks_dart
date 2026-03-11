@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:task_22_full_design/core/constants/api_constants.dart';
-import 'package:task_22_full_design/models/products_model.dart';
+import 'package:task_22_full_design/models/product_model.dart';
 
 class ProductService {
   Future<List<ProductModel>?> getAllProducts({required int skip}) async {

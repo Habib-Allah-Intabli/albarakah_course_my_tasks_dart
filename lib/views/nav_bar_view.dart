@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_22_full_design/blocs/cart_bloc/cart_bloc.dart';
+import 'package:task_22_full_design/blocs/favorite_bloc/favorite_bloc.dart';
 import 'package:task_22_full_design/blocs/product_bloc/product_bloc.dart';
+import 'package:task_22_full_design/core/service/cart_local_data_source.dart';
 import 'package:task_22_full_design/core/service/product_service.dart';
 import 'package:task_22_full_design/views/account_view.dart';
 import 'package:task_22_full_design/views/cart_view.dart';
@@ -31,14 +34,14 @@ class _NavBarViewState extends State<NavBarView> {
               ProductBloc(productService: ProductService())
                 ..add(GetAllProducts()),
         ),
-        // BlocProvider(
-        //   create: (context) => FavoriteBloc()..add(InitializeFavoriteList()),
-        // ),
-        // BlocProvider(
-        //   create: (context) =>
-        //       CartBloc(cartLocalDataSource: CartLocalDataSource())
-        //         ..add(InitiliazeCart()),
-        // ),
+        BlocProvider(
+          create: (context) => FavoriteBloc()..add(InitializeFavoriteList()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              CartBloc(cartLocalDataSource: CartLocalDataSource())
+                ..add(InitiliazeCart()),
+        ),
       ],
       child: Scaffold(
         body: pages[currentPage],

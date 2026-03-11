@@ -1,12 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-class ProductModel {
+import 'package:hive/hive.dart';
+part 'product_model.g.dart';
+@HiveType(typeId: 0) 
+class ProductModel extends HiveObject {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String title;
-  final String description;
+  @HiveField(2)
+  final String? description;
+  @HiveField(3)
   final String thumbnail;
+  @HiveField(4)
   final num price;
+
   ProductModel({
     required this.id,
     required this.title,
@@ -41,11 +48,12 @@ class ProductModel {
     };
   }
 
-  factory ProductModel.fromMap(Map<String, dynamic> map) {
+ 
+  factory ProductModel.fromMap(Map<dynamic, dynamic> map) {
     return ProductModel(
       id: map['id'] as int,
       title: map['title'] as String,
-      description: map['description'] as String,
+      description: map['description'] as String?,
       thumbnail: map['thumbnail'] as String,
       price: map['price'] as num,
     );
@@ -53,31 +61,6 @@ class ProductModel {
 
   String toJson() => json.encode(toMap());
 
-  factory ProductModel.fromJson(String source) =>
-      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'ProductModel(id: $id, title: $title, description: $description, thumbnail: $thumbnail, price: $price)';
-  }
-
-  @override
-  bool operator ==(covariant ProductModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.thumbnail == thumbnail &&
-        other.price == price;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        thumbnail.hashCode ^
-        price.hashCode;
-  }
+  factory ProductModel.fromJson(String source) => 
+      ProductModel.fromMap(json.decode(source) as Map<dynamic, dynamic>);
 }

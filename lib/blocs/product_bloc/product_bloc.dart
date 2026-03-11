@@ -5,7 +5,7 @@ import 'package:task_22_full_design/core/constants/api_constants.dart';
 
 
 import 'package:task_22_full_design/core/service/product_service.dart';
-import 'package:task_22_full_design/models/products_model.dart';
+import 'package:task_22_full_design/models/product_model.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
