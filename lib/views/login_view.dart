@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_22_full_design/core/blocs/user_session_bloc/user_session_bloc.dart';
-
+import 'package:task_22_full_design/blocs/user_session_bloc/user_session_bloc.dart';
+import 'package:task_22_full_design/views/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

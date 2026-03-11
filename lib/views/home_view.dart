@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_22_full_design/blocs/product_bloc/product_bloc.dart';
 import 'package:task_22_full_design/views/details_view.dart';
 import 'package:task_22_full_design/views/search_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
+        context.read<ProductBloc>().add(GetAllProducts());
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,65 +111,170 @@ class HomeView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemCount: 6,
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return DetailsView();
-                            },
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: 160,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
+                switch (state.productStatus) {
+                  case ProductStatus.initial:
+                    return Center(child: CircularProgressIndicator());
+                  case ProductStatus.success:
+                    if (state.products.isEmpty) {
+                      return Center(child: Text("No Data"));
+                    } else {
+                      return GridView.builder(
+                        controller: scrollController,
+                        // shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Image.asset(
-                                'assets/images/product_image.png',
-                                width: 120,
-                              ),
-                            ),
-                            Text('Regular Fit Slogan'),
-                            Text('\$ 1,190'),
-                          ],
+                        itemCount: state.hasReachedMax
+                            ? state.products.length
+                            : state.products.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index >= state.products.length) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            return Stack(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return DetailsView();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 160,
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Center(
+                                          child: Image.network(
+                                            state.products[index].thumbnail,
+                                            width: 120,
+                                          ),
+                                        ),
+                                        Text(state.products[index].title),
+                                        Text(
+                                          state.products[index].price
+                                              .toString(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 130),
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: FloatingActionButton(
+                                      heroTag: 'favorite_button_$index',
+                                      backgroundColor: Colors.white,
+                                      onPressed: () {},
+                                      child: Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    }
+                  case ProductStatus.failure:
+                    return Center(
+                      child: Text(state.errorMessage ?? "Error Message"),
+                    );
+                  case ProductStatus.loading:
+                    if (state.products.isEmpty) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      return GridView.builder(
+                        controller: scrollController,
+                        // shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 130),
-                      child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: FloatingActionButton(
-                          heroTag: 'favorite_button_$index',
-                          backgroundColor: Colors.white,
-                          onPressed: () {},
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+                        itemCount: state.hasReachedMax
+                            ? state.products.length
+                            : state.products.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index >= state.products.length) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            return Stack(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return DetailsView();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 160,
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Center(
+                                          child: Image.network(
+                                            state.products[index].thumbnail,
+                                            width: 120,
+                                          ),
+                                        ),
+                                        Text(state.products[index].title),
+                                        Text(
+                                          state.products[index].price
+                                              .toString(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 130),
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: FloatingActionButton(
+                                      heroTag: 'favorite_button_$index',
+                                      backgroundColor: Colors.white,
+                                      onPressed: () {},
+                                      child: Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    }
+                }
               },
             ),
           ),
